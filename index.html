@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قاموس الكلمات الناطق الشامل</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 15px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e3a8a;
+            margin: 10px 0 5px;
+            font-size: 24px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th {
+            background-color: #1e293b;
+            color: white;
+            padding: 12px;
+            font-size: 15px;
+            border: 1px solid #334155;
+            text-align: center;
+        }
+
+        td {
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f1f5f9;
+        }
+
+        tr:hover {
+            background-color: #e2e8f0;
+        }
+
+        .num-col {
+            width: 5%;
+            text-align: center;
+            font-weight: bold;
+            color: #475569;
+        }
+
+        .meaning-col {
+            width: 25%;
+            font-weight: bold;
+            color: #0f172a;
+            font-size: 15px;
+        }
+
+        .word-col {
+            width: 70%;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .pron-text {
+            direction: rtl;
+            text-align: right;
+            font-size: 13px;
+            color: #d97706;
+            background: #fef3c7;
+            padding: 3px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 6px;
+            border: 1px solid #fde68a;
+            font-weight: bold;
+        }
+
+        .words-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .clickable-word {
+            background: #eff6ff;
+            color: #1e3a8a;
+            padding: 4px 8px;
+            border-radius: 5px;
+            border: 1px solid #bfdbfe;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .clickable-word:hover {
+            background: #2563eb;
+            color: white;
+            border-color: #1d4ed8;
+        }
+
+        .separator {
+            color: #94a3b8;
+            font-weight: bold;
+        }
+
+        .play-all-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .play-all-btn:hover {
+            background: #059669;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🗣️ جدول الكلمات والمرادفات الناطق</h1>
+        <p class="subtitle">اضغط على أي كلمة بالإنجليزية لنطقها بمفردها، أو زر 🔊 لنطق جميع الترادفات متتالية</p>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>المعنى بالعربية</th>
+                        <th>الكلمة والمرادفات والنطق (اضغط للنطق)</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const wordsData = [
+            {"num": "1", "word": "Air traffic control system = Air traffic management", "pron": "إير ترافيك كونترول سيستم = إير ترافيك مانجمنت", "meaning": "نظام التحكم في المرور الجوي"},
+            {"num": "2", "word": "Organization = Institution = Establishment = Agency", "pron": "أورجانيزيشن = إنستيتيوشن = إيستابليشمنت = إيجينسي", "meaning": "مؤسسة / منظمة"},
+            {"num": "3", "word": "Equipment = Gear = Tools = Apparatus", "pron": "إكويبمنت = جير = تولز = أباراتوس", "meaning": "معدات / أدوات"},
+            {"num": "4", "word": "Design = Create = Plan = Devise", "pron": "ديزاين = كرييت = بلان = ديفايز", "meaning": "يصمم"},
+            {"num": "5", "word": "Ensure = Make sure = Guarantee = Confirm", "pron": "إنشور = ميك شور = جارانتي = كونفيرم", "meaning": "يتأكد / يضمن"},
+            {"num": "6", "word": "Peacefully = Calmly = Quietly = Harmoniously", "pron": "بيسفولي = كالملي = كوايتلي = هارمونياسلي", "meaning": "بأمان / بسلام"},
+            {"num": "7", "word": "Hunt = Chase = Track = Pursue", "pron": "هانت = تشيس = تراك = بيرسو", "meaning": "يصطاد / يطارد"},
+            {"num": "8", "word": "Safety = Security = Protection", "pron": "سيفيتي = سيكيوريتي = بروتكشن", "meaning": "أمان / سلامة"},
+            {"num": "9", "word": "Private Personal = Individual = Exclusive", "pron": "برايفيت بيرسونال = إنديفيدوال = إكسكلوسيف", "meaning": "خاص"},
+            {"num": "10", "word": "Commercial = Mercantile = Trade-related", "pron": "كوميرشال = ميركانتايل = تريد ريليتد", "meaning": "تجاري"},
+            {"num": "11", "word": "Air traveller = Passenger = Flyer", "pron": "إير ترافيلر = باسينجر = فلاير", "meaning": "مسافر جوي"},
+            {"num": "12", "word": "Responsible for = In charge of = Accountable for", "pron": "ريسبونسِبل فور = إن تشارج أوف = أكونتابل فور", "meaning": "مسؤول عن"},
+            {"num": "13", "word": "Smooth = Easy = Effortless = Seamless", "pron": "سموث = إيزي = إيفورتليس = سيمليس", "meaning": "سلس / بسلاسة"},
+            {"num": "14", "word": "Arrival = Entry = Landing = Appearance", "pron": "أرايفال = إنتري = لاندينج = أبيرانس", "meaning": "الوصول"},
+            {"num": "15", "word": "Craft store = Handcraft shop = Hobby shop", "pron": "كرافت ستور = هاندكرافت شوب = هوبي شوب", "meaning": "متجر الحرف / أعمال يدوية"},
+            {"num": "16", "word": "Reduce = Decrease = Lower = Diminish", "pron": "ريديوس = ديكريس = لوور = ديمينيش", "meaning": "يقلل"},
+            {"num": "17", "word": "Aggression = Hostility = Violence = Belligerence", "pron": "أجريشن = هوستيلتي = فايلونس = بيليجيرانس", "meaning": "عدوان / عنف"},
+            {"num": "18", "word": "Departures = Leave = Exit = Take-offs", "pron": "ديبارتشرز = ليف = إكزت = تيك أوفس", "meaning": "المغادرة"},
+            {"num": "19", "word": "Monitor = Observe = Track = Watch = Check", "pron": "مونيتور = أوبزيرف = تراك = ووتش = تشيك", "meaning": "يراقب / يتحكم في"},
+            {"num": "20", "word": "Aircraft = Airplane = Plane = Flight", "pron": "إيركرافت = إيربلين = بلين = فلايت", "meaning": "طائرة"},
+            {"num": "21", "word": "Enter = Access = Go into = Pass into", "pron": "إينتر = أكسيس = جو إنتو = باس إنتو", "meaning": "يدخل"},
+            {"num": "22", "word": "Airspace = Sky = Air territory", "pron": "إيرسبيس = سكاي = إير تيريتوري", "meaning": "المجال الجوي"},
+            {"num": "23", "word": "Free = Independent = Unrestricted", "pron": "فري = إنديبندنت = أنريستريكتد", "meaning": "حر / مجاني"},
+            {"num": "24", "word": "Carry out = Execute = Perform = Implement", "pron": "كاري أوت = إكسيكيوت = بيرفورم = إمبليمنت", "meaning": "ينفذ"},
+            {"num": "25", "word": "Job = Occupation = Profession = Task", "pron": "جوب = أكيوبيشن = بروفيشن = تاسك", "meaning": "وظيفة / عمل"},
+            {"num": "26", "word": "Fascination = Attraction = Charm = Interest", "pron": "فاسينيشن = أتراكشن = تشارم = إنتريست", "meaning": "روعة / افتتان"},
+            {"num": "27", "word": "Forms = Types = Kinds = Shapes", "pron": "فورمز = تايبس = كايندز = شيبس", "meaning": "أشكال / أنواع"},
+            {"num": "28", "word": "Tidy = Neat = Organized = Orderly", "pron": "تايدي = نيت = أورجنايزد = أوردرلي", "meaning": "مرتب"},
+            {"num": "29", "word": "Local = Domestic = Regional = Native", "pron": "لوكال = دوميستيك = ريجينال = نيتيف", "meaning": "محلي"},
+            {"num": "30", "word": "Specialized = Expert = Specific = Tailored", "pron": "سبيشلايزد = إكسبيرت = سبيسيفيك = تايلورد", "meaning": "متخصص / محدد"},
+            {"num": "31", "word": "Pastures = Grasslands = Meadows", "pron": "باستشورز = جراس لاندز = ميدوز", "meaning": "مراعي"},
+            {"num": "32", "word": "Possess = Own = Have = Hold", "pron": "بوزيس = أون = هاف = هولد", "meaning": "يمتلك"},
+            {"num": "33", "word": "Superior = Exceptional = Higher = Supreme", "pron": "سوبيريور = إكسبشنال = هاير = سوبريم", "meaning": "أعلى / متفوق / رائع"},
+            {"num": "34", "word": "Visual memories = Photographic memory", "pron": "فيجوال ميموريز = فوتوجرافيك ميموري", "meaning": "ذكريات بصرية"},
+            {"num": "35", "word": "Refer = Indicate = Point to = Mention", "pron": "ريفير = إنديكيت = بوينت تو = مينشن", "meaning": "يشير إلى"},
+            {"num": "36", "word": "Paper making = Paper production", "pron": "بيبر ميكينج = بيبر برودكشن", "meaning": "صناعة الورق"},
+            {"num": "37", "word": "Accumulated = Gathered = Collected = Piled up", "pron": "أكيوميوليتد = جاذرد = كوليكتد = بايلد أب", "meaning": "متراكم / يجمع"},
+            {"num": "38", "word": "Pile of = Heap of = Stack of", "pron": "بايل أوف = هيب أوف = ستاك أوف", "meaning": "كومة من"},
+            {"num": "39", "word": "Recently = Lately = Newly", "pron": "ريسينتلي = ليتلي = نيولي", "meaning": "مؤخراً"},
+            {"num": "40", "word": "Developed = Evolved = Advanced = Improved", "pron": "ديفيلوبد = إيفولفد = أدفانست = إمبرووفد", "meaning": "طور / تم تطويره"},
+            {"num": "41", "word": "Body language = Gestures = Non-verbal communication", "pron": "بودي لانجويج = جيستشرز = نون فيربال كوميونيكيشن", "meaning": "لغة الجسد"},
+            {"num": "42", "word": "Communication = Contact = Interaction", "pron": "كوميونيكيشن = كونتاكت = إنتراكشن", "meaning": "تواصل"},
+            {"num": "43", "word": "Pack = Herd = Flock = Group", "pron": "باك = هيرد = فلوك = جروب", "meaning": "قطيع / مجموعة"},
+            {"num": "44", "word": "Convert to = turn into = change into", "pron": "كونفيرت تو = تيرن إنتو = تشنج إنتو", "meaning": "يحول إلى"},
+            {"num": "45", "word": "Energy", "pron": "إنيرجي", "meaning": "طاقة"},
+            {"num": "46", "word": "Digest", "pron": "دايجست", "meaning": "يهضم"},
+            {"num": "47", "word": "Natural", "pron": "ناتشورال", "meaning": "طبيعي"},
+            {"num": "48", "word": "Substances", "pron": "سابستانسز", "meaning": "مواد"},
+            {"num": "49", "word": "Weather", "pron": "ويذر", "meaning": "طقس"},
+            {"num": "50", "word": "Whether", "pron": "ويذر", "meaning": "إذا / لو"},
+            {"num": "51", "word": "Growth = increase = go up", "pron": "جروث = إنكريس = جو أب", "meaning": "نمو / زيادة"},
+            {"num": "52", "word": "Food", "pron": "فود", "meaning": "طعام"},
+            {"num": "53", "word": "Germs", "pron": "جيرمز", "meaning": "جراثيم"},
+            {"num": "54", "word": "Caution", "pron": "كوشن", "meaning": "يحذر / حذر"},
+            {"num": "55", "word": "Consume = use up", "pron": "كونسيوم = يوز أب", "meaning": "يستهلك"},
+            {"num": "56", "word": "Apply (v)", "pron": "أبلاي", "meaning": "يطبق"},
+            {"num": "57", "word": "Application (n)", "pron": "أبليكيشن", "meaning": "تطبيق"},
+            {"num": "58", "word": "Tradition", "pron": "تراديشن", "meaning": "تقليد / تقاليد"},
+            {"num": "59", "word": "Dangerous = harmful", "pron": "دينجرس = هارمفول", "meaning": "خطير / مضر"},
+            {"num": "60", "word": "Confirm", "pron": "كونفيرم", "meaning": "يؤكد"},
+            {"num": "61", "word": "Pass down through", "pron": "باس داون ثرو", "meaning": "يمرر عبر / يتوارث"},
+            {"num": "62", "word": "Infant", "pron": "إنفانت", "meaning": "طفل رضيع"},
+            {"num": "63", "word": "Contain", "pron": "كونتين", "meaning": "يحتوي على"}
+        ];
+
+        function speakText(text) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        const tbody = document.getElementById('table-body');
+
+        wordsData.forEach(item => {
+            const tr = document.createElement('tr');
+
+            // تقسيم الترادفات وتجميع أزرار تفاعلية لكل كلمة
+            const parts = item.word.split('=').map(p => p.trim());
+            let wordsHTML = `<button class="play-all-btn" onclick="speakText('${item.word.replace(/=/g, ', ')}')">🔊 الكل</button> `;
+
+            parts.forEach((part, index) => {
+                wordsHTML += `<span class="clickable-word" onclick="speakText('${part}')">${part}</span>`;
+                if (index < parts.length - 1) {
+                    wordsHTML += `<span class="separator">=</span>`;
+                }
+            });
+
+            tr.innerHTML = `
+                <td class="num-col">${item.num}</td>
+                <td class="meaning-col">${item.meaning}</td>
+                <td class="word-col">
+                    <div class="pron-text">${item.pron}</div>
+                    <div class="words-container">${wordsHTML}</div>
+                </td>
+            `;
+
+            tbody.appendChild(tr);
+        });
+    </script>
+</body>
+  </html>
+      
